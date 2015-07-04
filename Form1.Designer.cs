@@ -52,10 +52,10 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.selectFamilyListluaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -274,25 +274,26 @@
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.saveToolStripMenuItem.Text = "Save";
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// saveAsToolStripMenuItem
 			// 
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.saveAsToolStripMenuItem.Text = "Save As";
 			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(111, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -302,14 +303,6 @@
 			this.selectFamilyListluaToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
 			this.selectFamilyListluaToolStripMenuItem.Text = "Select FamilyList.lua";
 			this.selectFamilyListluaToolStripMenuItem.Click += new System.EventHandler(this.selectFamilyListluaToolStripMenuItem_Click);
-			// 
-			// openFileDialog2
-			// 
-			this.openFileDialog2.Filter = "Lua Files|*.lua";
-			// 
-			// saveFileDialog1
-			// 
-			this.saveFileDialog1.Filter = "Weapon Files|*.wepn";
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -325,6 +318,14 @@
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.aboutToolStripMenuItem.Text = "About";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			// 
+			// openFileDialog2
+			// 
+			this.openFileDialog2.Filter = "Lua Files|*.lua";
+			// 
+			// saveFileDialog1
+			// 
+			this.saveFileDialog1.Filter = "Weapon Files|*.wepn";
 			// 
 			// Form1
 			// 

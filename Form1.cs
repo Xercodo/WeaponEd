@@ -42,7 +42,7 @@ namespace WeaponEd
 			propertyGrid1.SelectedObject = weaponDefine;
 			SetLabelColumnWidth(propertyGrid1, 200);
 
-			txtFile.Text = Path.GetFileName(file);
+			txtFile.Text = file;
 
 			StreamReader reader = new StreamReader(file);
 			bool functionStarted = false;
@@ -276,7 +276,8 @@ namespace WeaponEd
 			DialogResult result = saveFileDialog1.ShowDialog();
 			if (result == System.Windows.Forms.DialogResult.OK)
 			{
-				StreamWriter writer = new StreamWriter(saveFileDialog1.FileName);
+				txtFile.Text = saveFileDialog1.FileName;
+				StreamWriter writer = new StreamWriter(txtFile.Text);
 				writer.Write(weaponDefine.ToString());
 				writer.Close();
 			}
@@ -291,6 +292,13 @@ namespace WeaponEd
 		{
 			AboutBox1 aboutBox = new AboutBox1();
 			aboutBox.ShowDialog();
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			StreamWriter writer = new StreamWriter(txtFile.Text);
+			writer.Write(weaponDefine.ToString());
+			writer.Close();
 		}
     }
 
