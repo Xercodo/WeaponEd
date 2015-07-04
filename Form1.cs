@@ -18,6 +18,25 @@ namespace WeaponEd
 {
     public partial class Form1 : Form
     {
+		string loadedFile = "";
+
+		public string LoadedFile
+		{
+			get { return loadedFile; }
+			set 
+			{ 
+				loadedFile = value; 
+				if(loadedFile != "")
+				{
+					this.Text = Path.GetFileName(loadedFile) + " - WeaponEd";
+				}
+				else
+				{
+					this.Text = "WeaponEd";
+				}
+			}
+		}
+
         public Form1(string arg)
 		{
 			InitializeComponent();
@@ -42,7 +61,7 @@ namespace WeaponEd
 			propertyGrid1.SelectedObject = weaponDefine;
 			SetLabelColumnWidth(propertyGrid1, 200);
 
-			txtFile.Text = file;
+			LoadedFile = file;
 
 			StreamReader reader = new StreamReader(file);
 			bool functionStarted = false;
@@ -107,15 +126,6 @@ namespace WeaponEd
 
 			pnlHorizPreview.Refresh();
 			pnlVertPreview.Refresh();
-		}
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-			DialogResult result = openFileDialog1.ShowDialog();
-			if (result == System.Windows.Forms.DialogResult.OK)
-			{
-				OpenFile(openFileDialog1.FileName);
-			}
 		}
 
 		void weaponDefine_AngleUpdate(object sender, EventArgs e)
@@ -276,8 +286,8 @@ namespace WeaponEd
 			DialogResult result = saveFileDialog1.ShowDialog();
 			if (result == System.Windows.Forms.DialogResult.OK)
 			{
-				txtFile.Text = saveFileDialog1.FileName;
-				StreamWriter writer = new StreamWriter(txtFile.Text);
+				LoadedFile = saveFileDialog1.FileName;
+				StreamWriter writer = new StreamWriter(LoadedFile);
 				writer.Write(weaponDefine.ToString());
 				writer.Close();
 			}
@@ -296,9 +306,18 @@ namespace WeaponEd
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			StreamWriter writer = new StreamWriter(txtFile.Text);
+			StreamWriter writer = new StreamWriter(LoadedFile);
 			writer.Write(weaponDefine.ToString());
 			writer.Close();
+		}
+
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DialogResult result = openFileDialog1.ShowDialog();
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				OpenFile(openFileDialog1.FileName);
+			}
 		}
     }
 
