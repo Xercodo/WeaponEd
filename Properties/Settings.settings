@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WeaponEd.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Min" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="Max" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Blue</Value>
+    </Setting>
+    <Setting Name="TriggerA" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Lime</Value>
+    </Setting>
+    <Setting Name="TriggerB" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Yellow</Value>
+    </Setting>
+    <Setting Name="FamilyList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
