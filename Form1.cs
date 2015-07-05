@@ -13,6 +13,9 @@ using System.IO;
 using System.Drawing.Design;
 using System.Windows.Forms.PropertyGridInternal;
 using System.Windows.Forms.Design;
+using Microsoft.Win32;
+using Octokit;
+using System.Diagnostics;
 
 namespace WeaponEd
 {
@@ -41,18 +44,69 @@ namespace WeaponEd
 		{
 			InitializeComponent();
 
+			FamilyListReader.FamilyLuaPathChanged += FamilyListReader_FamilyLuaPathChanged;
+
 			pnlMin.BackColor = WeaponEd.Properties.Settings.Default.Min;
 			pnlMax.BackColor = WeaponEd.Properties.Settings.Default.Max;
 			pnlTriggerA.BackColor = WeaponEd.Properties.Settings.Default.TriggerA;
 			pnlTriggerB.BackColor = WeaponEd.Properties.Settings.Default.TriggerB;
 
-			FamilyListReader.familyLuaPath = WeaponEd.Properties.Settings.Default.FamilyList;
+			FamilyListReader.FamilyLuaPath = WeaponEd.Properties.Settings.Default.FamilyList;
 
 			if(File.Exists(arg))
 			{
 				OpenFile(arg);
 			}
         }
+
+		void FamilyListReader_FamilyLuaPathChanged(object sender, EventArgs e)
+		{
+			lblFamilyLua.Text = FamilyListReader.FamilyLuaPath;
+		}
+
+		private void SetasDefaultProgram()
+		{
+			string ext = ".wepn";
+			string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
+
+			RegistryKey key = Registry.ClassesRoot.CreateSubKey(ext);
+			key.SetValue("", "My Project");
+			key.Close();
+
+			key = Registry.ClassesRoot.CreateSubKey(ext + "\\Shell\\Open\\command");
+
+			key.SetValue("", "\"" + System.Windows.Forms.Application.ExecutablePath + "\" \"%L\"");
+			key.Close();
+
+			key = Registry.ClassesRoot.CreateSubKey(ext + "\\DefaultIcon");
+			key.SetValue("(Default)", exePath);// + "\\icon.ico");
+			key.Close();
+		}
+
+		private void CheckVersion()
+		{
+			var client = new Octokit.GitHubClient(new ProductHeaderValue("WeaponEd"));
+			var releases = client.Release.GetAll("xercodo", "WeaponEd");
+			var latest = releases.Result[0];
+
+			Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+			string currentVersion = ver.Major + "." + ver.Minor;
+			if (currentVersion != latest.TagName)
+			{
+				DialogResult result =  MessageBox.Show(this, "There's a newer version of WeaponEd!\r\n\r\n" + 
+					"Current: " + currentVersion + "\r\n" + 
+					"Latest Version: " + latest.TagName + "\r\n\r\n" + 
+					"Do you want to visit the release page now?", 
+					"Newer Version", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+				if(result == System.Windows.Forms.DialogResult.Yes)
+				{
+					Process proc = new Process();
+					proc.StartInfo = new ProcessStartInfo(latest.HtmlUrl);
+					proc.Start();
+					this.Close();
+				}
+			}
+		}
 
 		private void OpenFile(string file)
 		{
@@ -272,7 +326,7 @@ namespace WeaponEd
 			{
 				WeaponEd.Properties.Settings.Default.FamilyList = openFileDialog2.FileName;
 				WeaponEd.Properties.Settings.Default.Save();
-				FamilyListReader.familyLuaPath = WeaponEd.Properties.Settings.Default.FamilyList;
+				FamilyListReader.FamilyLuaPath = WeaponEd.Properties.Settings.Default.FamilyList;
 			}
 		}
 
@@ -296,6 +350,8 @@ namespace WeaponEd
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			SetLabelColumnWidth(propertyGrid1, 200);
+
+			CheckVersion();
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -318,6 +374,17 @@ namespace WeaponEd
 			{
 				OpenFile(openFileDialog1.FileName);
 			}
+		}
+
+		private void setAsDefaultwepnProgramToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SetasDefaultProgram();
+			MessageBox.Show("Done!");
+		}
+
+		private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			CheckVersion();
 		}
     }
 
@@ -1358,10 +1425,29 @@ namespace WeaponEd
 
 	public static class FamilyListReader
 	{
-		public static string familyLuaPath;
+		private static string familyLuaPath;
+
+		public static string FamilyLuaPath
+		{
+			get { return FamilyListReader.familyLuaPath; }
+			set 
+			{ 
+				FamilyListReader.familyLuaPath = value; 
+				if(FamilyListReader.FamilyLuaPathChanged != null)
+				{
+					FamilyListReader.FamilyLuaPathChanged(null, EventArgs.Empty);
+				}
+			}
+		}
 
 		public static string[] GetAttackFamilies()
 		{
+			if(!File.Exists(familyLuaPath))
+			{
+				MessageBox.Show("The selected FamilyList.lua doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return new string[] { " " };
+			}
+
 			StreamReader reader = new StreamReader(familyLuaPath);
 			bool functionStarted = false;
 			string functionName = "";
@@ -1424,6 +1510,12 @@ namespace WeaponEd
 
 		public static string[] GetArmorFamilies()
 		{
+			if (!File.Exists(familyLuaPath))
+			{
+				MessageBox.Show("The selected FamilyList.lua doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return new string[] { " " };
+			}
+
 			StreamReader reader = new StreamReader(familyLuaPath);
 			bool functionStarted = false;
 			string functionName = "";
@@ -1483,6 +1575,8 @@ namespace WeaponEd
 
 			return names.ToArray();
 		}
+
+		public static event EventHandler FamilyLuaPathChanged;
 	}
 
 	public class WeaponTypeConverter : StringConverter
