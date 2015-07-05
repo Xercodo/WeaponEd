@@ -185,7 +185,7 @@
 			this.propertyGrid1.Location = new System.Drawing.Point(231, 27);
 			this.propertyGrid1.Name = "propertyGrid1";
 			this.propertyGrid1.SelectedObject = this.weaponDefine;
-			this.propertyGrid1.Size = new System.Drawing.Size(329, 412);
+			this.propertyGrid1.Size = new System.Drawing.Size(329, 417);
 			this.propertyGrid1.TabIndex = 12;
 			// 
 			// weaponDefine
