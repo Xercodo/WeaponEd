@@ -73,7 +73,7 @@ namespace WeaponEd.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("(No FamilyList.lua selected)")]
         public string FamilyList {
             get {
                 return ((string)(this["FamilyList"]));

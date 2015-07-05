@@ -51,13 +51,19 @@
 			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.selectFamilyListluaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.selectFamilyListluaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.setAsDefaultwepnProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.lblFamilyLua = new System.Windows.Forms.ToolStripStatusLabel();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
+			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// openFileDialog1
@@ -179,7 +185,7 @@
 			this.propertyGrid1.Location = new System.Drawing.Point(231, 27);
 			this.propertyGrid1.Name = "propertyGrid1";
 			this.propertyGrid1.SelectedObject = this.weaponDefine;
-			this.propertyGrid1.Size = new System.Drawing.Size(329, 411);
+			this.propertyGrid1.Size = new System.Drawing.Size(329, 412);
 			this.propertyGrid1.TabIndex = 12;
 			// 
 			// weaponDefine
@@ -231,7 +237,7 @@
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.selectFamilyListluaToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -294,12 +300,34 @@
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// selectFamilyListluaToolStripMenuItem
+			// toolsToolStripMenuItem
 			// 
-			this.selectFamilyListluaToolStripMenuItem.Name = "selectFamilyListluaToolStripMenuItem";
-			this.selectFamilyListluaToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
-			this.selectFamilyListluaToolStripMenuItem.Text = "Select FamilyList.lua";
-			this.selectFamilyListluaToolStripMenuItem.Click += new System.EventHandler(this.selectFamilyListluaToolStripMenuItem_Click);
+			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectFamilyListluaToolStripMenuItem1,
+            this.toolStripSeparator3,
+            this.setAsDefaultwepnProgramToolStripMenuItem});
+			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+			this.toolsToolStripMenuItem.Text = "Tools";
+			// 
+			// selectFamilyListluaToolStripMenuItem1
+			// 
+			this.selectFamilyListluaToolStripMenuItem1.Name = "selectFamilyListluaToolStripMenuItem1";
+			this.selectFamilyListluaToolStripMenuItem1.Size = new System.Drawing.Size(228, 22);
+			this.selectFamilyListluaToolStripMenuItem1.Text = "Select FamilyList.lua";
+			this.selectFamilyListluaToolStripMenuItem1.Click += new System.EventHandler(this.selectFamilyListluaToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(225, 6);
+			// 
+			// setAsDefaultwepnProgramToolStripMenuItem
+			// 
+			this.setAsDefaultwepnProgramToolStripMenuItem.Name = "setAsDefaultwepnProgramToolStripMenuItem";
+			this.setAsDefaultwepnProgramToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+			this.setAsDefaultwepnProgramToolStripMenuItem.Text = "Set as default .wepn program";
+			this.setAsDefaultwepnProgramToolStripMenuItem.Click += new System.EventHandler(this.setAsDefaultwepnProgramToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -324,11 +352,28 @@
 			// 
 			this.saveFileDialog1.Filter = "Weapon Files|*.wepn";
 			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblFamilyLua});
+			this.statusStrip1.Location = new System.Drawing.Point(0, 453);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(572, 22);
+			this.statusStrip1.TabIndex = 14;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// lblFamilyLua
+			// 
+			this.lblFamilyLua.Name = "lblFamilyLua";
+			this.lblFamilyLua.Size = new System.Drawing.Size(19, 17);
+			this.lblFamilyLua.Text = "    ";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(572, 450);
+			this.ClientSize = new System.Drawing.Size(572, 475);
+			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.propertyGrid1);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.menuStrip1);
@@ -342,6 +387,8 @@
 			this.groupBox1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.statusStrip1.ResumeLayout(false);
+			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -366,7 +413,6 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem selectFamilyListluaToolStripMenuItem;
 		private System.Windows.Forms.OpenFileDialog openFileDialog2;
 		private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
@@ -376,6 +422,12 @@
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripStatusLabel lblFamilyLua;
+		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem selectFamilyListluaToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem setAsDefaultwepnProgramToolStripMenuItem;
 
 	}
 }

@@ -15,7 +15,7 @@
       <Value Profile="(Default)">Yellow</Value>
     </Setting>
     <Setting Name="FamilyList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">test</Value>
+      <Value Profile="(Default)">(No FamilyList.lua selected)</Value>
     </Setting>
   </Settings>
 </SettingsFile>
