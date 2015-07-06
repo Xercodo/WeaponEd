@@ -53,6 +53,7 @@
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.selectFamilyListluaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.selectWeaponFireFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.setAsDefaultwepnProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +62,9 @@
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.lblFamilyLua = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblWeaponFire = new System.Windows.Forms.ToolStripStatusLabel();
+			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
@@ -185,7 +189,7 @@
 			this.propertyGrid1.Location = new System.Drawing.Point(231, 27);
 			this.propertyGrid1.Name = "propertyGrid1";
 			this.propertyGrid1.SelectedObject = this.weaponDefine;
-			this.propertyGrid1.Size = new System.Drawing.Size(329, 417);
+			this.propertyGrid1.Size = new System.Drawing.Size(329, 412);
 			this.propertyGrid1.TabIndex = 12;
 			// 
 			// weaponDefine
@@ -304,6 +308,7 @@
 			// 
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectFamilyListluaToolStripMenuItem1,
+            this.selectWeaponFireFolderToolStripMenuItem,
             this.toolStripSeparator3,
             this.setAsDefaultwepnProgramToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -316,6 +321,13 @@
 			this.selectFamilyListluaToolStripMenuItem1.Size = new System.Drawing.Size(228, 22);
 			this.selectFamilyListluaToolStripMenuItem1.Text = "Select FamilyList.lua";
 			this.selectFamilyListluaToolStripMenuItem1.Click += new System.EventHandler(this.selectFamilyListluaToolStripMenuItem_Click);
+			// 
+			// selectWeaponFireFolderToolStripMenuItem
+			// 
+			this.selectWeaponFireFolderToolStripMenuItem.Name = "selectWeaponFireFolderToolStripMenuItem";
+			this.selectWeaponFireFolderToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+			this.selectWeaponFireFolderToolStripMenuItem.Text = "Select WeaponFire Folder";
+			this.selectWeaponFireFolderToolStripMenuItem.Click += new System.EventHandler(this.selectWeaponFireFolderToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator3
 			// 
@@ -355,8 +367,10 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblFamilyLua});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 453);
+            this.lblFamilyLua,
+            this.toolStripStatusLabel1,
+            this.lblWeaponFire});
+			this.statusStrip1.Location = new System.Drawing.Point(0, 448);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(572, 22);
 			this.statusStrip1.TabIndex = 14;
@@ -368,19 +382,34 @@
 			this.lblFamilyLua.Size = new System.Drawing.Size(19, 17);
 			this.lblFamilyLua.Text = "    ";
 			// 
+			// toolStripStatusLabel1
+			// 
+			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+			this.toolStripStatusLabel1.Size = new System.Drawing.Size(519, 17);
+			this.toolStripStatusLabel1.Spring = true;
+			this.toolStripStatusLabel1.Text = "    ";
+			// 
+			// lblWeaponFire
+			// 
+			this.lblWeaponFire.Name = "lblWeaponFire";
+			this.lblWeaponFire.Size = new System.Drawing.Size(19, 17);
+			this.lblWeaponFire.Text = "    ";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(572, 475);
+			this.ClientSize = new System.Drawing.Size(572, 470);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.propertyGrid1);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.menuStrip1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
-			this.MinimumSize = new System.Drawing.Size(8, 480);
+			this.MaximumSize = new System.Drawing.Size(600, 5000);
+			this.MinimumSize = new System.Drawing.Size(8, 0);
 			this.Name = "Form1";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
 			this.Text = "WeaponEd";
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.groupBox1.ResumeLayout(false);
@@ -428,6 +457,10 @@
 		private System.Windows.Forms.ToolStripMenuItem selectFamilyListluaToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripMenuItem setAsDefaultwepnProgramToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem selectWeaponFireFolderToolStripMenuItem;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		private System.Windows.Forms.ToolStripStatusLabel lblWeaponFire;
 
 	}
 }

@@ -82,5 +82,17 @@ namespace WeaponEd.Properties {
                 this["FamilyList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("(No WeaponFire folder selected)")]
+        public string WeaponFire {
+            get {
+                return ((string)(this["WeaponFire"]));
+            }
+            set {
+                this["WeaponFire"] = value;
+            }
+        }
     }
 }

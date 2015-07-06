@@ -16,6 +16,7 @@ using System.Windows.Forms.Design;
 using Microsoft.Win32;
 using Octokit;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace WeaponEd
 {
@@ -45,6 +46,7 @@ namespace WeaponEd
 			InitializeComponent();
 
 			FamilyListReader.FamilyLuaPathChanged += FamilyListReader_FamilyLuaPathChanged;
+			FamilyListReader.WeaponFirePathChanged += FamilyListReader_WeaponFirePathChanged;
 
 			pnlMin.BackColor = WeaponEd.Properties.Settings.Default.Min;
 			pnlMax.BackColor = WeaponEd.Properties.Settings.Default.Max;
@@ -52,6 +54,13 @@ namespace WeaponEd
 			pnlTriggerB.BackColor = WeaponEd.Properties.Settings.Default.TriggerB;
 
 			FamilyListReader.FamilyLuaPath = WeaponEd.Properties.Settings.Default.FamilyList;
+			FamilyListReader.WeaponFire = WeaponEd.Properties.Settings.Default.WeaponFire;
+
+			if(!IsAdministrator())
+			{
+				setAsDefaultwepnProgramToolStripMenuItem.Enabled = false;
+				setAsDefaultwepnProgramToolStripMenuItem.Text += " (Requires Admin Rights)";
+			}
 
 			if(File.Exists(arg))
 			{
@@ -59,28 +68,67 @@ namespace WeaponEd
 			}
         }
 
+		void FamilyListReader_WeaponFirePathChanged(object sender, EventArgs e)
+		{
+			lblWeaponFire.Text = FamilyListReader.WeaponFire;
+		}
+
 		void FamilyListReader_FamilyLuaPathChanged(object sender, EventArgs e)
 		{
 			lblFamilyLua.Text = FamilyListReader.FamilyLuaPath;
 		}
 
-		private void SetasDefaultProgram()
+		private void SetAsDefaultProgram()
 		{
 			string ext = ".wepn";
-			string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
+			//string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
 
-			RegistryKey key = Registry.ClassesRoot.CreateSubKey(ext);
-			key.SetValue("", "My Project");
-			key.Close();
+			//RegistryKey key = Registry.ClassesRoot.CreateSubKey(ext);
+			//key.SetValue("", "WeaponEd");
+			//key.Close();
 
-			key = Registry.ClassesRoot.CreateSubKey(ext + "\\Shell\\Open\\command");
+			//key = Registry.ClassesRoot.CreateSubKey(ext + "\\Shell\\Open\\command");
 
-			key.SetValue("", "\"" + System.Windows.Forms.Application.ExecutablePath + "\" \"%L\"");
-			key.Close();
+			//key.SetValue("", "\"" + System.Windows.Forms.Application.ExecutablePath + "\" \"%L\"");
+			//key.Close();
 
-			key = Registry.ClassesRoot.CreateSubKey(ext + "\\DefaultIcon");
-			key.SetValue("(Default)", exePath);// + "\\icon.ico");
-			key.Close();
+			//==============================================================
+
+			String myExecutable = System.Reflection.Assembly.GetEntryAssembly().Location;
+			String command = "\"" + myExecutable + "\"" + " \"%L\"";
+
+			string appPath = @"Applications\WeaponEd.exe";			
+			string openPath = @"\shell\open\command";			
+			string editPath = @"\shell\edit\command";
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(appPath + openPath))
+			{
+				key.SetValue("", command);
+			}
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(appPath + editPath))
+			{
+				key.SetValue("", command);
+			}
+
+
+			//string filePath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.wepn";
+			string filePath = @".wepn";
+			//RegistryKey fileKey = Registry.ClassesRoot.CreateSubKey(filePath);
+
+			String fileKeyName = filePath + @"\OpenWithList";
+			using (var key = Registry.ClassesRoot.CreateSubKey(filePath + openPath))
+			{
+				key.SetValue("", command);
+				//key.SetValue("a", "WeaponEd.exe");
+				//key.SetValue("MRUList", "a");
+			}
+
+			//String fileKeyName2 = imgkey + @"\shell\Edit\command";
+			//using (var key = Registry.ClassesRoot.CreateSubKey(keyName2))
+			//{
+			//	key.SetValue("", command);
+			//}
 		}
 
 		private void CheckVersion()
@@ -378,13 +426,32 @@ namespace WeaponEd
 
 		private void setAsDefaultwepnProgramToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SetasDefaultProgram();
+			SetAsDefaultProgram();
 			MessageBox.Show("Done!");
+		}
+
+		public static bool IsAdministrator()
+		{
+			var identity = WindowsIdentity.GetCurrent();
+			var principal = new WindowsPrincipal(identity);
+			return principal.IsInRole(WindowsBuiltInRole.Administrator);
 		}
 
 		private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			CheckVersion();
+		}
+
+		private void selectWeaponFireFolderToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DialogResult result = folderBrowserDialog1.ShowDialog();
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				WeaponEd.Properties.Settings.Default.WeaponFire = folderBrowserDialog1.SelectedPath;
+				WeaponEd.Properties.Settings.Default.Save();
+				FamilyListReader.WeaponFire = WeaponEd.Properties.Settings.Default.WeaponFire;
+				FamilyListReader.GetWeaponFireEffects();
+			}
 		}
     }
 
@@ -657,7 +724,8 @@ namespace WeaponEd
 		}
 
 		private string weaponfirename = "";
-		[CategoryAttribute(" Types"),
+		[CategoryAttribute(" Types"), 
+		TypeConverter(typeof(WeaponTypeConverter)),
 		DisplayName("Fire Name"),
 		Description("This is the description for SpaceKey")]
 		public string Weaponfirename
@@ -1440,6 +1508,21 @@ namespace WeaponEd
 			}
 		}
 
+		private static string weaponFire;
+
+		public static string WeaponFire
+		{
+			get { return FamilyListReader.weaponFire; }
+			set
+			{ 
+				FamilyListReader.weaponFire = value; 
+				if(WeaponFirePathChanged != null)
+				{
+					WeaponFirePathChanged(null, EventArgs.Empty);
+				}
+			}
+		}
+
 		public static string[] GetAttackFamilies()
 		{
 			if(!File.Exists(familyLuaPath))
@@ -1576,7 +1659,19 @@ namespace WeaponEd
 			return names.ToArray();
 		}
 
+		public static string[] GetWeaponFireEffects()
+		{
+			string[] list = Directory.GetFiles(weaponFire, "*.wf", SearchOption.AllDirectories);
+			List<string> names = new List<string>();
+			foreach (string item in list)
+			{
+				names.Add(Path.GetFileNameWithoutExtension(item));
+			}
+			return names.ToArray();
+		}
+
 		public static event EventHandler FamilyLuaPathChanged;
+		public static event EventHandler WeaponFirePathChanged;
 	}
 
 	public class WeaponTypeConverter : StringConverter
@@ -1660,6 +1755,11 @@ namespace WeaponEd
 					returnCollection =
 						new StandardValuesCollection(
 							FamilyListReader.GetArmorFamilies());
+					break;
+				case "Weaponfirename":
+					returnCollection =
+						new StandardValuesCollection(
+							FamilyListReader.GetWeaponFireEffects());
 					break;
 				default:
 					returnCollection =
