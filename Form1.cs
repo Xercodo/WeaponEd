@@ -80,26 +80,19 @@ namespace WeaponEd
 
 		private void SetAsDefaultProgram()
 		{
-			string ext = ".wepn";
-			//string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
-
-			//RegistryKey key = Registry.ClassesRoot.CreateSubKey(ext);
-			//key.SetValue("", "WeaponEd");
-			//key.Close();
-
-			//key = Registry.ClassesRoot.CreateSubKey(ext + "\\Shell\\Open\\command");
-
-			//key.SetValue("", "\"" + System.Windows.Forms.Application.ExecutablePath + "\" \"%L\"");
-			//key.Close();
-
-			//==============================================================
-
 			String myExecutable = System.Reflection.Assembly.GetEntryAssembly().Location;
 			String command = "\"" + myExecutable + "\"" + " \"%L\"";
 
 			string appPath = @"Applications\WeaponEd.exe";			
 			string openPath = @"\shell\open\command";			
 			string editPath = @"\shell\edit\command";
+
+			string autoPath = @"wepn_auto_file";
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(".wepn"))
+			{
+				key.SetValue("", "wepn_auto_file");
+			}
 
 			using (var key = Registry.ClassesRoot.CreateSubKey(appPath + openPath))
 			{
@@ -111,24 +104,84 @@ namespace WeaponEd
 				key.SetValue("", command);
 			}
 
-
-			//string filePath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.wepn";
-			string filePath = @".wepn";
-			//RegistryKey fileKey = Registry.ClassesRoot.CreateSubKey(filePath);
-
-			String fileKeyName = filePath + @"\OpenWithList";
-			using (var key = Registry.ClassesRoot.CreateSubKey(filePath + openPath))
+			using (var key = Registry.ClassesRoot.CreateSubKey(autoPath + openPath))
 			{
 				key.SetValue("", command);
-				//key.SetValue("a", "WeaponEd.exe");
-				//key.SetValue("MRUList", "a");
 			}
 
-			//String fileKeyName2 = imgkey + @"\shell\Edit\command";
-			//using (var key = Registry.ClassesRoot.CreateSubKey(keyName2))
-			//{
-			//	key.SetValue("", command);
-			//}
+			using (var key = Registry.ClassesRoot.CreateSubKey(autoPath + editPath))
+			{
+				key.SetValue("", command);
+			}
+
+			//=============================================================================================
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(".wepn" + openPath))
+			{
+				key.SetValue("", command);
+			}
+
+			string softwarePath = @"Software\Classes\";
+			using (var key = Registry.CurrentUser.CreateSubKey(softwarePath + ".wepn"))
+			{
+				key.SetValue("", "wepn_auto_file");
+			}
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(softwarePath + "wepn_auto_file" + openPath))
+			{
+				key.SetValue("", command);
+			}
+
+			using (var key = Registry.ClassesRoot.CreateSubKey(softwarePath + "wepn_auto_file" + editPath))
+			{
+				key.SetValue("", command);
+			}
+
+			string filePath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.wepn\";
+			using (var key = Registry.CurrentUser.CreateSubKey(filePath + "OpenWithList"))
+			{
+				var list = key.GetValue("MRUList");
+				if (list != null)
+				{
+					string data = list.ToString();
+					bool foundWeponEd = false;
+					char index = ' ';
+					foreach (char item in data)
+					{
+						if ((key.GetValue(item.ToString()).ToString() == "WeaponEd.exe"))
+						{
+							foundWeponEd = true;
+							index = item;
+						}
+					}
+
+					if (foundWeponEd)
+					{
+						//Remove it from the existing position in the list and put it at the top
+						data = data.Remove(data.IndexOf(index), 1);
+						data = index + data;
+					}
+					else
+					{
+						//It didn't already exist so let's add it using the next letter in the alphabet and then insert it at the top
+						char lastChar = data[data.Length - 1];
+						lastChar++;
+						key.SetValue(lastChar.ToString(), "WeaponEd.exe");
+						data = lastChar + data;
+					}
+					key.SetValue("MRUList", data);
+				}
+				else
+				{
+					key.SetValue("a", "WeaponEd.exe");
+					key.SetValue("MRUList", "a");
+				}
+			}
+
+			using (var key = Registry.CurrentUser.CreateSubKey(filePath + "OpenWithProgids"))
+			{
+				key.SetValue("wepn_auto_file", new byte[] { }, RegistryValueKind.None);
+			}
 		}
 
 		private void CheckVersion()
@@ -498,6 +551,8 @@ namespace WeaponEd
 
 	public class WeaponResult
 	{
+		#region Properties
+
 		private string weapon = "";
 		[CategoryAttribute("Types"),
 		Browsable(false),
@@ -565,6 +620,8 @@ namespace WeaponEd
 			set { spawnedweaponeffect = value; }
 		}
 
+		#endregion
+
 		private string[] ParseSetup(string source)
 		{
 			int first = source.IndexOf('(');
@@ -612,6 +669,8 @@ namespace WeaponEd
 
 	public class AccuracyProfile
 	{
+		#region Properties
+
 		private string familyname = "";
 		[CategoryAttribute("Accuracy"),
 		TypeConverter(typeof(WeaponTypeConverter)),
@@ -640,6 +699,8 @@ namespace WeaponEd
 			set { alwaysdamage = value; }
 		}
 
+		#endregion
+
 		public override string ToString()
 		{
 			return Familyname + " : " + value + " : " + alwaysdamage;
@@ -648,6 +709,8 @@ namespace WeaponEd
 
 	public class PenetrationProfile
 	{
+		#region Properties
+
 		private string armorfamilyname = "";
 		[CategoryAttribute("Penetration"),
 		TypeConverter(typeof(WeaponTypeConverter)),
@@ -667,6 +730,8 @@ namespace WeaponEd
 			set { this.value = value; }
 		}
 
+		#endregion
+
 		public override string ToString()
 		{
 			return armorfamilyname + " : " + value;
@@ -675,6 +740,10 @@ namespace WeaponEd
 
 	public class WeaponDefinition : Component
 	{
+		#region Properties
+
+		#region Main Properties
+
 		private string weaponname = "";
 		[CategoryAttribute(" Types"),
 		Browsable(false),
@@ -968,6 +1037,9 @@ namespace WeaponEd
 			set { instanthitthreshold = value; }
 		}
 
+		#endregion
+
+		#region Angles
 		//==================================================================== Angles
 
 		private string objecttype;
@@ -1070,6 +1142,9 @@ namespace WeaponEd
 			}
 		}
 
+		#endregion
+
+		#region Weapon Results, Penetration, and Accuracy
 		//==================================================================== WeaponResult
 
 		private List<WeaponResult> results = new List<WeaponResult>();
@@ -1079,57 +1154,6 @@ namespace WeaponEd
 		{
 			get { return results; }
 			set { results = value; }
-		}
-
-		//==================================================================== MiscValues
-
-		private string objecttypemisc = "";
-		[CategoryAttribute("Misc"),
-		Browsable(false),
-		DisplayName("Object Type")]
-		public string Objecttypemisc
-		{
-			get { return objecttypemisc; }
-			set { objecttypemisc = value; }
-		}
-
-		private float recoildistance = 0;
-		[CategoryAttribute("Misc"),
-		DisplayName("Recoil Distance")]
-		public float Recoildistance
-		{
-			get { return recoildistance; }
-			set { recoildistance = value; }
-		}
-
-		private float slavefiredelay = 0;
-		[CategoryAttribute("Misc"),
-		DisplayName("Slave Fire Delay")]
-		public float Slavefiredelay
-		{
-			get { return slavefiredelay; }
-			set { slavefiredelay = value; }
-		}
-
-		//==================================================================== AnimTurretSound
-
-		private string objecttypesound = "";
-		[CategoryAttribute("Sound"),
-		Browsable(false),
-		DisplayName("Object Type")]
-		public string Objecttypesound
-		{
-			get { return objecttypesound; }
-			set { objecttypesound = value; }
-		}
-
-		private string soundpath = "";
-		[CategoryAttribute("Sound"),
-		DisplayName("Sound Path")]
-		public string Soundpath
-		{
-			get { return soundpath; }
-			set { soundpath = value; }
 		}
 
 		//==================================================================== Accuracy
@@ -1200,6 +1224,66 @@ namespace WeaponEd
 			get { return penetrationprofiles; }
 			set { penetrationprofiles = value; }
 		}
+
+		#endregion
+
+		#region Misc and Sound
+		//==================================================================== MiscValues
+
+		private string objecttypemisc = "";
+		[CategoryAttribute("Misc"),
+		Browsable(false),
+		DisplayName("Object Type")]
+		public string Objecttypemisc
+		{
+			get { return objecttypemisc; }
+			set { objecttypemisc = value; }
+		}
+
+		private float recoildistance = 0;
+		[CategoryAttribute("Misc"),
+		DisplayName("Recoil Distance")]
+		public float Recoildistance
+		{
+			get { return recoildistance; }
+			set { recoildistance = value; }
+		}
+
+		private float slavefiredelay = 0;
+		[CategoryAttribute("Misc"),
+		DisplayName("Slave Fire Delay")]
+		public float Slavefiredelay
+		{
+			get { return slavefiredelay; }
+			set { slavefiredelay = value; }
+		}
+
+		//==================================================================== AnimTurretSound
+
+		private string objecttypesound = "";
+		[CategoryAttribute("Sound"),
+		Browsable(false),
+		DisplayName("Object Type")]
+		public string Objecttypesound
+		{
+			get { return objecttypesound; }
+			set { objecttypesound = value; }
+		}
+
+		private string soundpath = "";
+		[CategoryAttribute("Sound"),
+		DisplayName("Sound Path")]
+		public string Soundpath
+		{
+			get { return soundpath; }
+			set { soundpath = value; }
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Parsers
 
 		private string[] ParseSetup(string source)
 		{
@@ -1372,6 +1456,8 @@ namespace WeaponEd
 			}
 		}
 
+		#endregion
+
 		public event EventHandler AngleUpdate;
 
 		public override string ToString()
@@ -1454,47 +1540,57 @@ namespace WeaponEd
 				returnString += this.slavefiredelay + ");\r\n";
 			}
 
-			returnString += "\r\n--Weapon Accuracy".PadRight(pad, '=') + "\r\n\r\n";
-
-			returnString += "setAccuracy(";
-			returnString += this.objecttypeaccuracy + ",";
-			returnString += Convert.ToInt32(this.enabled);
-			foreach (AccuracyProfile prof in this.accuracyprofiles)
+			if (this.accuracyprofiles.Count > 0)
 			{
-				returnString += ",\r\n";
-				returnString += "{" + prof.Familyname + "=" + prof.Value;
-				if(prof.Alwaysdamage)
+				returnString += "\r\n--Weapon Accuracy".PadRight(pad, '=') + "\r\n\r\n";
+
+				returnString += "setAccuracy(";
+				returnString += this.objecttypeaccuracy + ",";
+				returnString += Convert.ToInt32(this.enabled);
+				foreach (AccuracyProfile prof in this.accuracyprofiles)
 				{
-					returnString += ",damage=1}";
+					returnString += ",\r\n";
+					returnString += "{" + prof.Familyname + "=" + prof.Value;
+					if (prof.Alwaysdamage)
+					{
+						returnString += ",damage=1}";
+					}
+					else
+					{
+						returnString += "}";
+					}
+				}
+				returnString += ");\r\n";
+			}
+
+
+				returnString += "\r\n--Weapon Penetration".PadRight(pad, '=') + "\r\n\r\n";
+
+				returnString += "setPenetration(";
+				returnString += this.objecttypepenetration + ",";
+				returnString += this.fieldpenetration + ",";
+				returnString += this.defaultpenetration;
+				if (this.penetrationprofiles.Count > 0)
+				{
+					foreach (PenetrationProfile prof in this.penetrationprofiles)
+					{
+						returnString += ",\r\n";
+						returnString += "{" + prof.Armorfamilyname + "=" + prof.Value + "}";
+					}
+					returnString += ");";
 				}
 				else
 				{
-					returnString += "}";
+					returnString += ");";
 				}
-			}
-			returnString += ");\r\n";
 
-			returnString += "\r\n--Weapon Penetration".PadRight(pad, '=') + "\r\n\r\n";
-
-			returnString += "setPenetration(";
-			returnString += this.objecttypepenetration + ",";
-			returnString += this.fieldpenetration + ",";
-			returnString += this.defaultpenetration;
-			foreach (PenetrationProfile prof in this.penetrationprofiles)
-			{
-				returnString += ",\r\n";
-				returnString += "{" + prof.Armorfamilyname + "=" + prof.Value + "}";
-			}
-			returnString += ");";
-
-			return returnString;
+				return returnString;
 		}
 	}
 
 	public static class FamilyListReader
 	{
 		private static string familyLuaPath;
-
 		public static string FamilyLuaPath
 		{
 			get { return FamilyListReader.familyLuaPath; }
@@ -1509,7 +1605,6 @@ namespace WeaponEd
 		}
 
 		private static string weaponFire;
-
 		public static string WeaponFire
 		{
 			get { return FamilyListReader.weaponFire; }
@@ -1661,13 +1756,17 @@ namespace WeaponEd
 
 		public static string[] GetWeaponFireEffects()
 		{
-			string[] list = Directory.GetFiles(weaponFire, "*.wf", SearchOption.AllDirectories);
-			List<string> names = new List<string>();
-			foreach (string item in list)
+			if (!File.Exists(weaponFire))
 			{
-				names.Add(Path.GetFileNameWithoutExtension(item));
+				string[] list = Directory.GetFiles(weaponFire, "*.wf", SearchOption.AllDirectories);
+				List<string> names = new List<string>();
+				foreach (string item in list)
+				{
+					names.Add(Path.GetFileNameWithoutExtension(item));
+				}
+				return names.ToArray();
 			}
-			return names.ToArray();
+			return new string[] { "" };
 		}
 
 		public static event EventHandler FamilyLuaPathChanged;
