@@ -1502,7 +1502,7 @@ namespace WeaponEd
 			{
 				returnString += "\r\n--Sound".PadRight(pad, '=') + "\r\n\r\n";
 				returnString += "addAnimTurretSound(";
-				returnString += this.objecttypesound + ",";
+				returnString += this.weaponname + ",";
 				returnString += "\"" + this.soundpath + "\");\r\n";
 			}
 
@@ -1511,7 +1511,7 @@ namespace WeaponEd
 			foreach (WeaponResult result in this.results)
 			{
 				returnString += "AddWeaponResult(";
-				returnString += result.Weapon + ",";
+				returnString += this.weaponname + ",";
 				returnString += "\"" + result.Condition + "\",";
 				returnString += "\"" + result.Effect + "\",";
 				returnString += "\"" + result.Target + "\",";
@@ -1523,7 +1523,7 @@ namespace WeaponEd
 			returnString += "\r\n--Weapon Angles".PadRight(pad, '=') + "\r\n\r\n";
 
 			returnString += "setAngles(";
-			returnString += this.objecttype + ",";
+			returnString += this.weaponname + ",";
 			returnString += this.triggerhappy + ",";
 			returnString += this.minazimuth + ",";
 			returnString += this.maxazimuth + ",";
@@ -1535,7 +1535,7 @@ namespace WeaponEd
 				returnString += "\r\n--Recoil and Slave Fire Delay".PadRight(pad, '=') + "\r\n\r\n";
 
 				returnString += "setMiscValues(";
-				returnString += this.objecttypemisc + ",";
+				returnString += this.weaponname + ",";
 				returnString += this.recoildistance + ",";
 				returnString += this.slavefiredelay + ");\r\n";
 			}
@@ -1545,7 +1545,7 @@ namespace WeaponEd
 				returnString += "\r\n--Weapon Accuracy".PadRight(pad, '=') + "\r\n\r\n";
 
 				returnString += "setAccuracy(";
-				returnString += this.objecttypeaccuracy + ",";
+				returnString += this.weaponname + ",";
 				returnString += Convert.ToInt32(this.enabled);
 				foreach (AccuracyProfile prof in this.accuracyprofiles)
 				{
@@ -1567,7 +1567,7 @@ namespace WeaponEd
 				returnString += "\r\n--Weapon Penetration".PadRight(pad, '=') + "\r\n\r\n";
 
 				returnString += "setPenetration(";
-				returnString += this.objecttypepenetration + ",";
+				returnString += this.weaponname + ",";
 				returnString += this.fieldpenetration + ",";
 				returnString += this.defaultpenetration;
 				if (this.penetrationprofiles.Count > 0)
