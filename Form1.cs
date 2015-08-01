@@ -45,6 +45,8 @@ namespace WeaponEd
 		{
 			InitializeComponent();
 
+			Properties.Settings.Default.Upgrade();
+
 			FamilyListReader.FamilyLuaPathChanged += FamilyListReader_FamilyLuaPathChanged;
 			FamilyListReader.WeaponFirePathChanged += FamilyListReader_WeaponFirePathChanged;
 
