@@ -20,5 +20,8 @@
     <Setting Name="WeaponFire" Type="System.String" Scope="User">
       <Value Profile="(Default)">(No WeaponFire folder selected)</Value>
     </Setting>
+    <Setting Name="DoUpgrade" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
